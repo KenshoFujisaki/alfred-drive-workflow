@@ -51,6 +51,7 @@ MIME_TYPE_ICONS = {
   'application/vnd.google-apps.presentation' => { :path => 'icons/slide.png' },
   'application/vnd.google-apps.form'         => { :path => 'icons/form.png'  },
   'application/pdf'                          => { :path => 'icons/dummy.pdf', :type => 'fileicon' },
+  'application/vnd.google-apps.folder'       => { :path => 'icons/folder.png'  }
 }
 
 FileUtils.mkdir_p(CACHE_DIR)
@@ -288,7 +289,7 @@ class GoogleDrive
     uri = URI.parse('https://www.googleapis.com/drive/v2/files')
 
     mime_types = MIME_TYPE_ICONS.keys << 'application/vnd.google-apps.folder'
-    query = "trashed=false and (#{mime_types.map { |type| "mimeType='#{type}'" }.join(' or ')})"
+    query = "trashed=false"
     if custom = ENV['custom_query']
       query = "(#{query}) and (#{custom})"
     end
@@ -524,8 +525,7 @@ begin
       folders = items.select { |item| item['mimeType'] == 'application/vnd.google-apps.folder' }
       folders.each { |item| parents_by_id[item['id']] = item }
 
-      files = items.reject { |item| item['mimeType'] == 'application/vnd.google-apps.folder' }
-      files = files.select { |item| item['title'] =~ filter_regex }
+      files = items.select { |item| item['title'] =~ filter_regex }
       files = files.sort { |lhs, rhs| rhs['modifiedDate'] <=> lhs['modifiedDate'] }
 
       res += files.map do |item|
