@@ -297,9 +297,10 @@ class GoogleDrive
     parms = {
       'q'          => query,
       'fields'     => 'nextPageToken,items(id,title,alternateLink,mimeType,parents(id,isRoot),modifiedDate,lastModifyingUserName)',
-      'maxResults' => 1000,
-      'supportsTeamDrives' => true,
-      'includeTeamDriveItems' => true,
+      'maxResults' => 100000,
+      'supportsAllDrives' => 'true',
+      'includeItemsFromAllDrives'  => 'true',
+      'corpora' => 'allDrives'
     }
 
     http = Net::HTTP.new(uri.host, uri.port)
