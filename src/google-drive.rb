@@ -474,7 +474,7 @@ begin
       STDERR << "Failed to create document.\nServer responded with status #{response.code}\n"
     end
   elsif ARGV[0] == '--filter'
-    filter = ARGV[1].to_s.strip
+    filter = ARGV[1].unicode_normalize(:nfkc).to_s.strip
     name   = filter =~ /\S+\s(.+)/ ? $1 : nil
 
     res = [
